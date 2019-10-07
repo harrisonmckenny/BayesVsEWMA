@@ -1,0 +1,74 @@
+library(MASS)
+library(corpcor)
+library(tseries)
+library(rJava)
+library(xlsx)
+library(RiskPortfolios)
+#corr matrix from book 
+cv=c(1,0.92,0.33,0.26,0.28,0.16,0.29,0.42,0.92,1,0.26,0.22,0.27,0.14,0.25,0.36,0.33,0.26,1,0.41,0.3,0.25,0.58,0.71,0.26,0.22,0.41,1,0.62,0.42,0.54,0.44,0.28,0.27,0.3,0.62,1,0.35,0.48,0.34,0.16,0.14,0.25,0.42,0.35,1,0.4,0.22,0.29,0.25,0.58,0.54,0.48,0.4,1,0.56,0.42,0.36,0.71,0.44,0.34,0.22,0.56,1)
+cv=matrix(cv,ncol=8,nrow=8)
+cv
+mean=c(0.83,0.85,0.97,1.46,1.11,1.46,1.37,1.29)
+SD=c(1.99,1.52,5.47,7,6.19,7.01,5.99,4.28)
+#This is wrong because it uses corr matrix to generate data and not the covariance matrix
+dgp=mvrnorm(216,mean,cv)
+dgp=data.frame(dgp)
+colnames(dgp)=c("Euro Bonds","US Bonds","Canada","France","Germany","Japan","UK","US")
+dgp=as.matrix(dgp)
+vcv=cov(dgp)
+vcv
+#Making cov mat out of corr mat
+b=SD %*% t(SD)
+acov=b*cv
+acov
+
+#perturbed truth
+rdgp1=mvrnorm(216,mean,acov)
+rdgp1=data.frame(rdgp1)
+colnames(rdgp1)=c("Euro Bonds","US Bonds","Canada","France","Germany","Japan","UK","US")
+rdgp1=as.matrix(rdgp1)
+
+
+
+#drawing from truth
+means=c(mean(rdgp1[,1]),mean(rdgp1[,2]),mean(rdgp1[,3]),mean(rdgp1[,4]),mean(rdgp1[,5]),mean(rdgp1[,6]),mean(rdgp1[,7]),mean(rdgp1[,8]))
+means
+covariance=cov(rdgp1)
+covariance
+#History 1
+hist1=mvrnorm(216,mn,draw)
+hist1
+
+#RiskPort
+library(RiskPortfolios)
+a=covEstimation(hist1,control=list(type="naive"))
+a
+b=meanEstimation(hist1,control=list(type="bs"))
+b
+c=semidevEstimation(hist1,control=list(type="naive"))
+c
+wstar1 <- optimalPortfolio(a,b,c,control=list(type = 'minvol',gamma=1))
+wstar1
+wstar2 <- optimalPortfolio(a,b,c,control=list(type = 'minvol',gamma=0.5))
+wstar2
+wstar3 <- optimalPortfolio(a,b,c,control=list(type = 'minvol',gamma=2))
+wstar3
+
+g=covEstimation(hist1,control=list(type="ewma"))
+g
+d=meanEstimation(hist1,control=list(type="ewma"))
+d
+e=semidevEstimation(hist1,control=list(type="ewma"))
+e
+w1 <- optimalPortfolio(g,d,e,control=list(type = 'mv',gamma=1))
+w1
+w2 <- optimalPortfolio(g,d,e,control=list(type = 'mv',gamma=0.5))
+w2
+w3 <- optimalPortfolio(g,d,e,control=list(type = 'mv',gamma=2))
+w3
+sum(w)
+
+comp=rbind(w1,w2,w3,wstar1,wstar2,wstar3)
+comp
+b
+d
