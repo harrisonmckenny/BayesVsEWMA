@@ -66,7 +66,7 @@ w2 <- optimalPortfolio(g,d,e,control=list(type = 'mv',gamma=0.5))
 w2
 w3 <- optimalPortfolio(g,d,e,control=list(type = 'mv',gamma=2))
 w3
-sum(w)
+
 
 comp=rbind(w1,w2,w3,wstar1,wstar2,wstar3)
 comp
