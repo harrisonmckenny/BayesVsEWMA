@@ -36,7 +36,7 @@ means
 covariance=cov(rdgp1)
 covariance
 #History 1
-hist1=mvrnorm(216,mn,draw)
+hist1=mvrnorm(216,means,covariance)
 hist1
 
 #RiskPort
