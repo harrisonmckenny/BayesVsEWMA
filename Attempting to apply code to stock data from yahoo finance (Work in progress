@@ -9,7 +9,8 @@ cv=matrix(cv,ncol=8,nrow=8)
 cv
 mean=c(0.83,0.85,0.97,1.46,1.11,1.46,1.37,1.29)
 SD=c(1.99,1.52,5.47,7,6.19,7.01,5.99,4.28)
-#This is wrong because it uses corr matrix to generate data and not the covariance matrix
+
+
 dgp=mvrnorm(216,mean,cv)
 dgp=data.frame(dgp)
 colnames(dgp)=c("Euro Bonds","US Bonds","Canada","France","Germany","Japan","UK","US")
@@ -51,7 +52,13 @@ hist.returns=hist1
 hist.means=apply(hist.returns,2,mean,na.rm=TRUE)
 hist.cov=cov(hist.returns,use="complete.obs")
 hist.cov
-#final-opt.r
+
+
+
+
+###################--------------- Trying to Apply to Yahoo Finance data set
+##################---------------------H. McKenny, M.W.Dempsey and John Carter
+#---------------------------------Work in Progress
 # Portfolio Optimizer
 make.port <- function(means, 
                       covariance, 
@@ -59,14 +66,7 @@ make.port <- function(means,
                       min.allocation = 0,
                       risk.premium.up = .5, 
                       risk.increment=.005) {
-  # A function to optimize a portfolio, using quadratic programming
-  # Inputs:
-  #       means           a vector of stock means
-  #       covariance      the stocks' covariance matrix
-  #       max.allocation  a parameter that controls the maximum weight in the final portfolio
-  #       min.allocation  a parameter that controls the minimum weight in the final portfolio 
-  #       risk.premium.up the maximum risk taken
-  #       risk.increment  the step size
+
   # Outputs:
   #   The stock portfolio's efficent frontier 
   
